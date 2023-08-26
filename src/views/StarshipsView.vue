@@ -45,20 +45,15 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, onBeforeMount } from "vue"
-  import axios from "axios"
+  import { ref, onMounted } from "vue"
+  import axios from "@/plugins/axios"
   import VueSimpleSpinner from "@/components/Spinner/Spinner.vue"
+
+  let id = ref(0)
+  const _imgURL = ref("")
 
   const starships = ref([])
   const starshipInfo = ref([])
-
-  const baseURL = "https://swapi.dev/api/"
-  const _imgURL = ref("")
-  let id = ref(0)
-
-  const instance = axios.create({
-    baseURL: baseURL,
-  })
 
   const getDetail = (starship, index) => {
     id.value = index + 1
@@ -69,7 +64,7 @@
   const getNames = async () => {
     id.value = Math.floor(Math.random() * 10)
 
-    await instance
+    await axios
       .get("/starships")
       .then((data) => {
         starships.value = data.data.results
