@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-  import { ref, onMounted, onBeforeMount } from "vue"
+  import { ref } from "vue"
   import axios from "axios"
 
   const planet = ref({})
@@ -55,13 +55,9 @@
       })
   }
 
-  onBeforeMount(() => {
-    getDataByTime()
-  })
+  getDataByTime()
 
-  onMounted(() => {
-    setInterval(getDataByTime, 5000)
-  })
+  setInterval(getDataByTime, 5000)
 
   // this.interval = setInterval(this.updatePlanet, 1000)
 </script>

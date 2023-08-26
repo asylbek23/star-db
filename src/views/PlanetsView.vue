@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-  import { ref, onMounted } from "vue"
+  import { ref } from "vue"
   import axios from "@/plugins/axios"
   import VueSimpleSpinner from "@/components/Spinner/Spinner.vue"
 
@@ -77,7 +77,5 @@
       })
   }
 
-  onMounted(() => {
-    getNames()
-  })
+  getNames()
 </script>
