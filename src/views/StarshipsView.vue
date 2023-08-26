@@ -45,8 +45,8 @@
 </template>
 
 <script setup>
-  import { ref } from "vue"
-  import axios from "@/plugins/axios"
+  import { ref, watch, onMounted } from "vue"
+  import { getNames } from "@/api/get-names"
   import VueSimpleSpinner from "@/components/Spinner/Spinner.vue"
 
   let id = ref(0)
@@ -55,24 +55,19 @@
   const starships = ref([])
   const starshipInfo = ref([])
 
+  getNames("/starships", starships)
+
   const getDetail = (starship, index) => {
     id.value = index + 1
     _imgURL.value = `https://starwars-visualguide.com/assets/img/starships/${id.value}.jpg`
     starshipInfo.value = starship
   }
 
-  const getNames = async () => {
-    id.value = Math.floor(Math.random() * 10)
+  watch(starships, (newVal) => {
+    localStorage.setItem("starships-names", JSON.stringify(newVal))
+  })
 
-    await axios
-      .get("/starships")
-      .then((data) => {
-        starships.value = data.data.results
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-
-  getNames()
+  onMounted(() => {
+    starships.value = JSON.parse(localStorage.getItem("starships-names")) || []
+  })
 </script>

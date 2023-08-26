@@ -48,8 +48,8 @@
 </template>
 
 <script setup>
-  import { ref } from "vue"
-  import axios from "@/plugins/axios"
+  import { ref, watch, onMounted } from "vue"
+  import { getNames } from "@/api/get-names"
   import VueSimpleSpinner from "@/components/Spinner/Spinner.vue"
 
   const _imgURL = ref("")
@@ -58,24 +58,19 @@
   const planets = ref([])
   const planetInfo = ref([])
 
+  getNames("/planets", planets)
+
   const getDetail = (planet, index) => {
     id.value = index + 1
     _imgURL.value = `https://starwars-visualguide.com/assets/img/planets/${id.value}.jpg`
     planetInfo.value = planet
   }
 
-  const getNames = async () => {
-    id.value = Math.floor(Math.random() * 10)
+  watch(planets, (newVal) => {
+    localStorage.setItem("planets-names", JSON.stringify(newVal))
+  })
 
-    await axios
-      .get("/planets")
-      .then((data) => {
-        planets.value = data.data.results
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-
-  getNames()
+  onMounted(() => {
+    planets.value = JSON.parse(localStorage.getItem("planets-names")) || []
+  })
 </script>

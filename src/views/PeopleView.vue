@@ -48,8 +48,8 @@
 </template>
 
 <script setup>
-  import { ref } from "vue"
-  import axios from "@/plugins/axios"
+  import { ref, watch, onMounted } from "vue"
+  import { getNames } from "@/api/get-names"
   import VueSimpleSpinner from "@/components/Spinner/Spinner.vue"
 
   let id = ref(0)
@@ -58,24 +58,19 @@
   const peoples = ref([])
   const peopleInfo = ref([])
 
+  getNames("/people", peoples)
+
   const getDetail = (people, index) => {
     id.value = index + 1
     _imgURL.value = `https://starwars-visualguide.com/assets/img/characters/${id.value}.jpg`
     peopleInfo.value = people
   }
 
-  const getNames = async () => {
-    id.value = Math.floor(Math.random() * 10)
+  watch(peoples, (newVal) => {
+    localStorage.setItem("peoples-names", JSON.stringify(newVal))
+  })
 
-    await axios
-      .get("/people")
-      .then((data) => {
-        peoples.value = data.data.results
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-
-  getNames()
+  onMounted(() => {
+    peoples.value = JSON.parse(localStorage.getItem("peoples-names")) || []
+  })
 </script>
