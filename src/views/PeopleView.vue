@@ -50,14 +50,18 @@
 <script setup>
   import { ref, onMounted, onBeforeMount } from "vue"
   import axios from "axios"
-  import VueSimpleSpinner from "@/components/Spinner.vue"
+  import VueSimpleSpinner from "@/components/Spinner/Spinner.vue"
+
+  const instance = axios.create({
+    baseURL: baseURL,
+  })
+
+  const baseURL = "https://swapi.dev/api/"
+  const _imgURL = ref("")
+  let id = ref(0)
 
   const peoples = ref([])
   const peopleInfo = ref([])
-
-  const _apiURL = "https://swapi.dev/api/people/"
-  const _imgURL = ref("")
-  let id = ref(0)
 
   const getDetail = (people, index) => {
     id.value = index + 1
@@ -68,8 +72,8 @@
   const getNames = async () => {
     id.value = Math.floor(Math.random() * 10)
 
-    await axios
-      .get(_apiURL)
+    await instance
+      .get("/people")
       .then((data) => {
         peoples.value = data.data.results
       })
