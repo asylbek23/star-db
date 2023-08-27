@@ -11,7 +11,7 @@
   <main>
     <!-- Random planet -->
     <div class="random-planet">
-      <img :src="_imgURL" :alt="planet.name" width="200" height="200" />
+      <img :src="imgURL" :alt="planet.name" width="200" height="200" />
       <div class="random-planet__descr">
         <h3>{{ planet.name }}</h3>
         <p>
@@ -32,32 +32,23 @@
 
 <script setup>
   import { ref } from "vue"
-  import axios from "axios"
+  import { getPlanet } from "@/api/get-planet"
 
-  const planet = ref({})
-  const _imgURL = ref("")
   let id = ref("")
-  // const _imgURL = ref("https://starwars-visualguide.com/assets/img")
+  const planet = ref({})
+  const imgURL = ref("")
 
   const getDataByTime = async () => {
     id.value = Math.floor((Math.random() * 18) | 0) + 2
 
-    await axios
-      .get(`https://swapi.dev/api/planets/${id.value}`)
-      .then((data) => {
-        // console.log(data)
-        planet.value = data.data
-        _imgURL.value = `https://starwars-visualguide.com/assets/img/planets/${id.value}.jpg`
-        // _imgURL.value = `${_imgURL.value}/planets/${id.value}.jpg`
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    getPlanet(
+      `planets/${id.value}`,
+      planet,
+      imgURL,
+      `https://starwars-visualguide.com/assets/img/planets/${id.value}.jpg`
+    )
   }
 
   getDataByTime()
-
-  setInterval(getDataByTime, 5000)
-
-  // this.interval = setInterval(this.updatePlanet, 1000)
+  setInterval(getDataByTime, 7000)
 </script>
